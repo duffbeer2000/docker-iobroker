@@ -6,14 +6,8 @@ manifests:
       architecture: amd64
       os: linux
   -
-    image: duffbeer2000/iobroker:aarch64
+    image: duffbeer2000/iobroker:armhf
     platform:
       architecture: arm
-      variant: aarch64
-      os: linux
-  -
-    image: duffbeer2000/iobroker:armv7hf
-    platform:
-      architecture: arm
-      variant: armv7l
+      variant: armv71
       os: linux

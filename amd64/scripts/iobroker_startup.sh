@@ -259,7 +259,7 @@ set_capabilities() {
 	capabilities_encoded=${capabilities:(-16)}
 	capabilities_decoded=$(capsh --decode=${capabilities_encoded})
 	
-	# Check if the  the Container is started privilegded
+	# Check if the container is started privilegded
 	if [[ "${capabilities_encoded}" == "0000003fffffffff" ]]; then
 		${red}
 		echo ''
@@ -364,7 +364,6 @@ if [[ ${WEB_PORT} != *"8082"* ]]; then
 	cd /opt/iobroker
 	iobroker set web.0 --port ${WEB_PORT}
 fi
-	
 
 # Starting ioBroker
 echo ''
