@@ -1,0 +1,69 @@
+sudo: required
+services:
+  - docker
+language: bash
+env:
+  global:
+  - secure: "g94QL3M195m3BkMd6nMsROm3mbxjEJOG7/sqDZe9misXVN1or/s0Qxbkq+nAYyzo2FfArIilE2k472lQenTB29Y7SXGqe+JYTeWZFWCtkRc7lBcPrzMy7Fn+fGN2IBKrIn9ieKw55RhFB5VtMCfx+OsTS8lCfSmAzB8LItIqMul+6YXbi3ZFb16K1UzOtiUyJbcNBn9AcUNe/r3S6BQUNOwZbKoxp+8BLsBJoWCzOn2cBzYtam+Kcru7mjEu83rrq35qsGaRKEw9yN/L3PO64kYetfFs+nvHKFMjYcUnbOPpS6zRuQ+Tu65/qsT4irItXUenC17ke68/U77hTZC1bcmGccxsaWna+xzw8Pmihw4MlMHSkf78dqGWlihIBlpcQ36YitSKTrZgJPRZSuLL3Kt3q+JWxwXKmyP0urn/spnyR1Z2ROQcd604cmYsCbKjnXzJY8JBuZ8TxLx64mf1Jb6ruegqqzB1Kxu7Y2U6vTissgl4RDWWrMNS/aI7jphQP5sEK3/l4mz9cB0O8qmR71uQ0YaAQI9Io9nhBwHnnZ/LYEnIyRTlGBECzi//b0KWvsyYCj9yRKQBBOpFWCdVq3u3SvjPs+jBYTqg+q0SFdeTfAg8nyGvRD6iZZPD5ozOCynDTpfmA4vRlLFn+rDfDTBQGfDdChJS38BrLgEBcpI="
+  - secure: "BWvr5qX9YNWlUeS+7hKmSFUaJKpXB2I31QU5y3azQWiFk0g7U1thjStcs80NRsB9Ops3zcbet9TAhcg/KPR2Abn2Lk+Q02i0MAuBXXW6vE7d2qLXoqnFoxuFAqIHn1KaaLQ3D+mB2h1l2PY9S3R6TQ2XxpqEY1qcL5ti26vkwzaFltPtGeytKFPC1xvCepXKPBbS0K5SrbEyDsmS+7ls0fGvww5tIh64HZY+GtxG+xPasPc23SXkHhwpim5QXtCZI7OBN12Sqt9xnf+V9Zno650gOuu6fNs7F8ddv1tDfm+hL+wU7TOynjtH8HLlLp7vJ/rw0uc05n8qx3frdv2NFbS0RJsptIumyeaQbGy9YAu8F6ZBX2JkpX3x10Dty63EUFZo5rl2tVU/oz5HAXZBiWgSe+sYsLWtyMX2aXjVhFHRGHXg+P6o9MiIqAIiyJDrMzetX5CZYuqtMgggT48F2auQAc5OcDbEnSO5+TI26MJoySBhzyssuTWtib3br5LGA1yihzZnc2bir1BaTaALnfxb7O9fMOnxPBcr6R5w3slTlA7rdN2lew7n0bycw+POXdbkEt4+YSH39gY0Cantafr384r3WPDlLDsdPprn25sunvqHyKG9YTjdOnZ8DWzO5ScZfK8pGCsloecjEVsR7LgtKYWgoiEgzlB8xRq7Y/0="
+install:
+  - wget https://github.com/estesp/manifest-tool/releases/download/v0.7.0/manifest-tool-linux-amd64 -O manifest-tool
+  - chmod +x manifest-tool
+jobs:
+  include:
+    - stage: Build docker images
+      env:
+        - ARCH=amd64
+      script:
+      # Build amd64
+        - docker build -t "duffbeer2000/iobroker:$ARCH" ./amd64
+      # Build amd64-min
+        - docker build -t "duffbeer2000/iobroker:$ARCH-min" ./amd64-min
+      # Build amd64-full
+        - docker build -t "duffbeer2000/iobroker:$ARCH-full" ./amd64-full
+    - stage: Build docker images
+      env:
+        - ARCH=aarch64
+      script:
+      # Switch Architecture
+        - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      # Build aarch64
+        - docker build -t "duffbeer2000/iobroker:$ARCH" ./aarch64
+      # Build aarch64-min
+        - docker build -t "duffbeer2000/iobroker:$ARCH-min" ./aarch64-min
+      # Build aarch64-full
+        - docker build -t "duffbeer2000/iobroker:$ARCH-full" ./aarch64-full
+    - stage: Build docker images
+      env:
+        - ARCH=arm7hf
+      script:
+      # Switch Architecture
+        - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+      # Build armv7hf
+        - docker build -t "duffbeer2000/iobroker:$ARCH" ./armv7hf
+      # Build armv7hf-min
+        - docker build -t "duffbeer2000/iobroker:$ARCH-min" ./armv7hf-min
+      # Build armv7hf-full
+        - docker build -t "duffbeer2000/iobroker:$ARCH-full" ./armv7hf-full
+      #
+after_success:
+# Tag and push built images
+  - >
+    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      echo "$DOCKER_PASS" | docker login -u "$DOCKER_LOGIN" --password-stdin
+      VERSION=$(cat .VERSION)
+      docker tag duffbeer2000/iobroker:$ARCH duffbeer2000/iobroker:$ARCH-$VERSION
+      docker push duffbeer2000/iobroker:$ARCH
+      docker push duffbeer2000/iobroker:$ARCH-$VERSION
+      docker tag duffbeer2000/iobroker:$ARCH-min duffbeer2000/iobroker:$ARCH-min-$VERSION
+      docker push duffbeer2000/iobroker:$ARCH-min
+      docker push duffbeer2000/iobroker:$ARCH-min-$VERSION
+      docker tag duffbeer2000/iobroker:$ARCH-full duffbeer2000/iobroker:$ARCH-full-$VERSION
+      docker push duffbeer2000/iobroker:$ARCH-full
+      docker push duffbeer2000/iobroker:$ARCH-full-$VERSION
+    fi
+# Update repository manifest for multiarch duffbeer2000/iobroker:latest
+  - >
+    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yml
+    fi
