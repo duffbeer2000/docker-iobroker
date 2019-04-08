@@ -6,10 +6,10 @@ ADMIN_PORT=$IOBROKER_ADMIN_PORT
 WEB_PORT=$IOBROKER_WEB_PORT
 
 #Declarate variables
-version="0.7.0 beta"
-HOSTNAME_NEW=$(hostname)
+version="0.7.0"
 IOB_USER="iobroker"
 IOB_DIR="/opt/iobroker"
+HOSTNAME_NEW=$(hostname)
 
 # Getting date and time for logging 
 dati=`date '+%Y-%m-%d %H:%M:%S'`

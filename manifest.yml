@@ -1,13 +1,18 @@
-image: duffbeer2000/iobroker:latest
+image: duffbeer2000/iobroker:$FULLVERSION
 manifests:
   -
-    image: duffbeer2000/iobroker:amd64
+    image: duffbeer2000/iobroker:$VERSION-amd64
     platform:
       architecture: amd64
       os: linux
   -
-    image: duffbeer2000/iobroker:armhf
+    image: duffbeer2000/iobroker:$VERSION-aarch64
+    platform:
+      architecture: arm64
+      os: linux
+  -
+    image: duffbeer2000/iobroker:$VERSION-armv7hf
     platform:
       architecture: arm
-      variant: armv71
+      variant: v7
       os: linux

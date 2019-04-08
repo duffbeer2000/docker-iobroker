@@ -1,69 +1,120 @@
 sudo: required
+
 services:
   - docker
+
 language: bash
+
 env:
   global:
   - secure: "nw9C6gFPx6eWBexivPgyxZpGWRt5Ules6ISojwZ1+xOa2JYcJqMpN0nZTmU/qNp32jMCT5szcIROH++lJ9Tb7r4uCGyyVos2OzdmfFqTqfNo0a6nXZt+fOrq9vQjfd11XQkKqKEAsZ1bH8E0QjdHWLyp+p+mOoGJiwzr/Gs1hJ2d54yFWqyge/d9kD/79JhfHuMhcENmftYzmMn8hFWZ7ABspwwq6gfp+UwOGYuXVEhGX6XCc78SEBU1ba8k9yFeE9NIdeyXPbYaxbZEp2csFzMTOvPEyfTxnCjfMj+04slWP9cK0JnXG9MgZyA9loFWdGOiin4G7blcSpX7pq+4/UiKpFQl0kIBAEEV190DVkI/SKNOCFnIfTtf9QfmkbtxmEHIDElnmM2V1up/iDRiEet54w6Ht2IYdnM7wWqsznRqaVAtJQq4JZrARBUp8DqSs2egj1c14IznOAOB22v/d9LtQ2atF0mKkO+bEYh5TN+djQOCDhtTU16ZACMwRRhlxp2g1E2TB71A6Uf0nqZWDChh1iHWq6hd2LB/1OwUrNuqDuHg/ETWd4Y/LjzQHidD2zWGLihWKyFEepjleya90qOwZZx3yBjZiHGelkghwauyrm8cey5XK1clXrJ33FfEE/sv7et6daX5g5xQvKa9rs9UTN+wXItK6AlJ2p/Ht/M="
   - secure: "n0mcLZVxRmeJunRH1R0gwNIgKmXzt1B1tfVY71UuE6R3KtsZFIXsdVsN47y2fRtyFA3z1cH6uSQDhkrFii4l2OkrOE92e4eMVhd79atIAZjC0loZFxEEhDjc9nKANFpEoSSu/ZTDtea470OrkO1Gc4T/qjiQZJg3KolpGj1rPpsUJQ3zHBagC/AiRXsUclA0yQbV6BcSxRjccwen0iSIkN3VE8CRAPKVT/bIlSq+4F1XQMnjB34nKn+r9aNGdwbw6s8cyJFrI8xRVCZEAwC7BSevZSWbZfEdf5l/Ixr7N4gxJz/YMGOCthubHmS9GuHHvQBwDqvyxDzOdXr02HZv7Y62Oib/cpLtQigeHaq/fxOiY94sZPJaFCqy0zkLKgHcj21BD/r44AwmGMZiPC3VZeDRv9QqJjhaKaP63MH202oTyFgOCZdbsl7pn/h2/3woM9jH+gFlknpheIkVW7PbxYAPV0/eJxUR671ExmaAUWmDHfZlpM7+UatnDhbaFNPziFdSQSTtKtJSygfhMYDTj/B/hLMjVpXq2Chw+nW2dpvFSysaIjsWpD5U+DgJk6eZjnqR3Vm+pefquPWI1MB/qmIgr2A8CVPpHJLjwPQ16cVjjpL5nwSpemGr1FdM/UBQuchN77PzzdS5CZDXtYAywxAf4/g0LoJYLOQrRUTk9V0="
-install:
+  - VERSION="$(cat .VERSION)"
+
+before_install:
   - wget https://github.com/estesp/manifest-tool/releases/download/v0.7.0/manifest-tool-linux-amd64 -O manifest-tool
   - chmod +x manifest-tool
+  - docker run --rm --privileged multiarch/qemu-user-static:register
+  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_LOGIN" --password-stdin
+
 jobs:
   include:
     - stage: Build docker images
       env:
         - ARCH=amd64
+        - JOB_NAME="Build docker images"
       script:
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH/scripts/iobroker_startup.sh
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH-full/scripts/iobroker_startup.sh
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH-min/scripts/iobroker_startup.sh
+        - cat $ARCH-min/scripts/iobroker_startup.sh
       # Build amd64
-        - docker build -t "duffbeer2000/iobroker:$ARCH" ./amd64
+        - docker build -t "duffbeer2000/iobroker:$VERSION-$ARCH" ./amd64
       # Build amd64-min
-        - docker build -t "duffbeer2000/iobroker:$ARCH-min" ./amd64-min
+        - docker build -t "duffbeer2000/iobroker:min-$VERSION-$ARCH" ./amd64-min
       # Build amd64-full
-        - docker build -t "duffbeer2000/iobroker:$ARCH-full" ./amd64-full
+        - docker build -t "duffbeer2000/iobroker:full-$VERSION-$ARCH" ./amd64-full
+
     - stage: Build docker images
       env:
         - ARCH=aarch64
+        - JOB_NAME="Build docker images"
       script:
       # Switch Architecture
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH/scripts/iobroker_startup.sh
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH-full/scripts/iobroker_startup.sh
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH-min/scripts/iobroker_startup.sh
       # Build aarch64
-        - docker build -t "duffbeer2000/iobroker:$ARCH" ./aarch64
+        - docker build -t "duffbeer2000/iobroker:$VERSION-$ARCH" ./aarch64
       # Build aarch64-min
-        - docker build -t "duffbeer2000/iobroker:$ARCH-min" ./aarch64-min
+        - docker build -t "duffbeer2000/iobroker:min-$VERSION-$ARCH" ./aarch64-min
       # Build aarch64-full
-        - docker build -t "duffbeer2000/iobroker:$ARCH-full" ./aarch64-full
+        - docker build -t "duffbeer2000/iobroker:full-$VERSION-$ARCH" ./aarch64-full
+
     - stage: Build docker images
       env:
-        - ARCH=arm7hf
+        - ARCH=armv7hf
+        - JOB_NAME="Build docker images"
       script:
       # Switch Architecture
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH/scripts/iobroker_startup.sh
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH-full/scripts/iobroker_startup.sh
+        - sed -i "/^version=/c\version=${VERSION}" $ARCH-min/scripts/iobroker_startup.sh
       # Build armv7hf
-        - docker build -t "duffbeer2000/iobroker:$ARCH" ./armv7hf
+        - docker build -t "duffbeer2000/iobroker:$VERSION-$ARCH" ./armv7hf
       # Build armv7hf-min
-        - docker build -t "duffbeer2000/iobroker:$ARCH-min" ./armv7hf-min
+        - docker build -t "duffbeer2000/iobroker:min-$VERSION-$ARCH" ./armv7hf-min
       # Build armv7hf-full
-        - docker build -t "duffbeer2000/iobroker:$ARCH-full" ./armv7hf-full
-      #
+        - docker build -t "duffbeer2000/iobroker:full-$VERSION-$ARCH" ./armv7hf-full
+        
+    - stage: Manifest
+      env:
+        - ARCH=amd64
+        - JOB_NAME="Manifest"
+      script:
+        - echo Placeholder
+
 after_success:
 # Tag and push built images
   - >
-    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      echo "$DOCKER_PASS" | docker login -u "$DOCKER_LOGIN" --password-stdin
-      VERSION=$(cat .VERSION)
-      docker tag duffbeer2000/iobroker:$ARCH duffbeer2000/iobroker:$ARCH-$VERSION
-      docker push duffbeer2000/iobroker:$ARCH
-      docker push duffbeer2000/iobroker:$ARCH-$VERSION
-      docker tag duffbeer2000/iobroker:$ARCH-min duffbeer2000/iobroker:$ARCH-min-$VERSION
-      docker push duffbeer2000/iobroker:$ARCH-min
-      docker push duffbeer2000/iobroker:$ARCH-min-$VERSION
-      docker tag duffbeer2000/iobroker:$ARCH-full duffbeer2000/iobroker:$ARCH-full-$VERSION
-      docker push duffbeer2000/iobroker:$ARCH-full
-      docker push duffbeer2000/iobroker:$ARCH-full-$VERSION
+    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$JOB_NAME" == "Build docker images" ] ; then
+      docker push duffbeer2000/iobroker:$VERSION-$ARCH
+      docker push duffbeer2000/iobroker:full-$VERSION-$ARCH
+      docker push duffbeer2000/iobroker:min-$VERSION-$ARCH
     fi
+    
 # Update repository manifest for multiarch duffbeer2000/iobroker:latest
   - >
-    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yml
+    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$JOB_NAME" == "Manifest" ]; then
+      cat manifest.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
+      #image: duffbeer2000/iobroker:version
+      cat manifest.yaml | sed "s/\$FULLVERSION/${VERSION}/g" > manifestversion.yaml
+      #image: duffbeer2000/iobroker:latest
+      cat manifest.yaml | sed "s/\$FULLVERSION/latest/g" > manifestlatest.yaml
+      #image: duffbeer2000/iobroker:min-version
+      cat manifest.yml | sed "s/\$VERSION/min-${VERSION}/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/min-${VERSION}/g" > manifestmin.yaml
+      #image: duffbeer2000/iobroker:full-version
+      cat manifest.yml | sed "s/\$VERSION/full-${VERSION}/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/full-${VERSION}/g" > manifestfull.yaml
+      #Push to dockerhub
+      mv manifestversion.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifestlatest.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifestmin.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifestfull.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      #image: duffbeer2000/iobroker:amd64
+      cat manifest_amd64.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      #image: duffbeer2000/iobroker:aarch64
+      cat manifest_aarch64.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      #image: duffbeer2000/iobroker:armv7hf
+      cat manifest_armv7hf.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
     fi

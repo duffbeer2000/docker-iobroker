@@ -1,0 +1,8 @@
+image: duffbeer2000/iobroker:armv7hf
+manifests:
+  -
+    image: duffbeer2000/iobroker:$VERSION-armv7hf
+    platform:
+      architecture: arm
+      variant: v7
+      os: linux

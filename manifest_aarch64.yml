@@ -1,0 +1,7 @@
+image: duffbeer2000/iobroker:aarch64
+manifests:
+  -
+    image: duffbeer2000/iobroker:$VERSION-aarch64
+    platform:
+      architecture: arm64
+      os: linux

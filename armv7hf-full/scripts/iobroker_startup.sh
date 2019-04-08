@@ -9,7 +9,7 @@ asterisk=$ASTERISK
 yahka="false"
 
 #Declarate variables
-version="0.7.0 beta"
+version="0.7.0"
 IOB_USER="iobroker"
 IOB_DIR="/opt/iobroker"
 HOSTNAME_NEW=$(hostname)
