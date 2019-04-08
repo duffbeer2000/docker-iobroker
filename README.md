@@ -98,18 +98,24 @@ docker run -d \
 ### Tags
 |TAG|Description|
 |---------|-----------|
+|`latest`|Multiarch standard image, corrects false permissions of the ioBroker directory.|
+|`full`|Multiarch full image, scans the ioBroker directory for known adapter dependencies and corrects false permissions of the ioBroker directory.|
+|`min`|Multiarch minimal image, you have to look for everything on your own.|
+|`X.X.X|Same as latest above but with fixed image version, so there is no update till you change it.|
+|`full-X.X.X|Same as full but with fixed image version, so there is no update till you change it.|
+|`min-X.X.X|Same as min but with fixed image version, so there is no update till you change it.|
+|`X.X.X-*architecture*|Same as above but with fixed image version and fixed architecture, so there is no update till you change it.|
+|`full-X.X.X-*architecture*|Same as above but with fixed image version and fixed architecture, so there is no update till you change it.|
+|`min-X.X.X-*architecture*|Same as above but with fixed image version and fixed architecture, so there is no update till you change it.|
 |`amd64`|Standard image for amd64 achitecture, corrects false permissions of the ioBroker directory.|
-|`amd64-full`|Full image for amd64 achitecture, scans the ioBroker directory for known adapter dependencies and corrects false permissions of the ioBroker directory.|
-|`amd64-min`|Minimal image for amd64 achitecture, you have to look for everything on your own.|
-|`aarch64`|Standard image for aarch64 achitecture, corrects false permissions of the ioBroker Directory.|
-|`aarch64-full`|Full image for aarch64 achitecture, scans the ioBroker directory for known adapter dependencies and corrects false permissions of the ioBroker directory.|
-|`aarch64-min`|Minimal image for aarch64 achitecture, you have to look for everything on your own.|
 |`armv7hf`|Standard image for armv7hf achitecture, corrects false permissions of the ioBroker Directory.|
-|`armv7hf-full`|Full image for armv7hf achitecture, scans the ioBroker directory for known adapter dependencies and corrects false permissions of the ioBroker directory.|
-|`armv7hf-min`|Minimal image for armv7hf achitecture, you have to look for everything on your own.|
-|`*architecture*-full-X.X.X|Same as above but with fixed container version, so there is no update till you change it.|
-|`*architecture*-min-X.X.X|Same as above but with fixed container version, so there is no update till you change it.|
-|`*architecture*-X.X.X|Same as above but with fixed container version, so there is no update till you change it.|
+|`aarch64`|Standard image for aarch64 achitecture, corrects false permissions of the ioBroker Directory.|
+|`full-amd64`|Full image for amd64 achitecture, scans the ioBroker directory for known adapter dependencies and corrects false permissions of the ioBroker directory.|
+|`full-armv7hf`|Full image for armv7hf achitecture, scans the ioBroker directory for known adapter dependencies and corrects false permissions of the ioBroker directory.|
+|`full-aarch64`|Full image for aarch64 achitecture, scans the ioBroker directory for known adapter dependencies and corrects false permissions of the ioBroker directory.|
+|`min-amd64`|Minimal image for amd64 achitecture, you have to look for everything on your own.|
+|`min-armv7hf`|Minimal image for armv7hf achitecture, you have to look for everything on your own.|
+|`min-aarch64`|Minimal image for aarch64 achitecture, you have to look for everything on your own.|
 
 
 ### Gotchas / Known Issues

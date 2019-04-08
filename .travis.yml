@@ -101,6 +101,33 @@ after_success:
       cat manifest.yml | sed "s/\$VERSION/full-${VERSION}/g" > manifest.yaml
       cat manifest.yaml | sed "s/\$FULLVERSION/full-${VERSION}/g" > manifestfullversion.yaml
       cat manifest.yaml | sed "s/\$FULLVERSION/full/g" > manifestfull.yaml
+      #image: duffbeer2000/iobroker:amd64
+      cat manifest_amd64.yml | sed "s/\$VERSION/${VERSION}-amd64/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/amd64/g" > manifest_amd64.yaml
+      #image: duffbeer2000/iobroker:full-amd64
+      cat manifest_amd64.yml | sed "s/\$VERSION/full-${VERSION}-amd64/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/full-amd64/g" > manifest_fullamd64.yaml
+      #image: duffbeer2000/iobroker:min-amd64
+      cat manifest_amd64.yml | sed "s/\$VERSION/min-${VERSION}-amd64/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/min-amd64/g" > manifest_minamd64.yaml
+      #image: duffbeer2000/iobroker:armv7hf
+      cat manifest_armv7hf.yml | sed "s/\$VERSION/${VERSION}-armv7hf/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/armv7hf/g" > manifest_armv7hf.yaml
+      #image: duffbeer2000/iobroker:full-armv7hf
+      cat manifest_armv7hf.yml | sed "s/\$VERSION/full-${VERSION}-armv7hf/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/full-armv7hf/g" > manifest_fullarmv7hf.yaml
+      #image: duffbeer2000/iobroker:min-armv7hf
+      cat manifest_armv7hf.yml | sed "s/\$VERSION/min-${VERSION}-armv7hf/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/min-armv7hf/g" > manifest_minarmv7hf.yaml
+      #image: duffbeer2000/iobroker:aarch64
+      cat manifest_aarch64.yml | sed "s/\$VERSION/${VERSION}-aarch64/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/aarch64/g" > manifest_aarch64.yaml
+      #image: duffbeer2000/iobroker:full-aarch64
+      cat manifest_aarch64.yml | sed "s/\$VERSION/full-${VERSION}-aarch64/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/full-aarch64/g" > manifest_fullaarch64.yaml
+      #image: duffbeer2000/iobroker:min-aarch64
+      cat manifest_aarch64.yml | sed "s/\$VERSION/min-${VERSION}-aarch64/g" > manifest.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/min-aarch64/g" > manifest_minaarch64.yaml
       #Push to dockerhub
       mv manifestversion.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
@@ -114,13 +141,22 @@ after_success:
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
       mv manifestfullversion.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
-      #image: duffbeer2000/iobroker:amd64
-      cat manifest_amd64.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
+      mv manifest_amd64.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
-      #image: duffbeer2000/iobroker:aarch64
-      cat manifest_aarch64.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
+      mv manifest_fullamd64.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
-      #image: duffbeer2000/iobroker:armv7hf
-      cat manifest_armv7hf.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
+      mv manifest_minamd64.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifest_armv7hf.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifest_fullarmv7hf.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifest_minarmv7hf.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifest_aarch64.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifest_fullaarch64.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifest_minaarch64.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml      
     fi

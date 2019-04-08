@@ -1,7 +1,7 @@
-image: duffbeer2000/iobroker:amd64
+image: duffbeer2000/iobroker:$FULLVERSION
 manifests:
   -
-    image: duffbeer2000/iobroker:$VERSION-amd64
+    image: duffbeer2000/iobroker:$VERSION
     platform:
       architecture: amd64
       os: linux
