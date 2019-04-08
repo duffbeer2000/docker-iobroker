@@ -118,8 +118,47 @@ docker run -d \
 |`min-aarch64`|Minimal image for aarch64 achitecture, you have to look for everything on your own.|
 
 
-### Gotchas / Known Issues
+### Features of the different versions standard(latest), full and min 
+latest:
+	- Set AVAHI to 1 for yahka support
+	- Set IOBROKER_ADMIN_PORT to change the port of the admin adapter
+	- Set IOBROKER_WEB_PORT to change the port of the web adapter
+	- If a file with the name "UPGRADE" is detected in the iobroker folder the startup script runs a "npm rebuild" in the ioBroker folder. Only do this if you restore a ioBroker folder which was installed with a npm version prior to v8.
+	- If a file with the name "pre_script.sh" is detected in the iobroker folder the startup script makes it runable and starts it
+	- If a file with the name "custom_packages.list" is detected in the iobroker folder it installs all packages in the file
+	- If a file with the name "post_script.sh" is detected in the iobroker folder the startup script makes it runable and starts it
+	- If a file with NPM_UPGRADE_TRIGGER="/opt/iobroker/REINSTALL"
+	- before it starts ioBroker it corrects file and folder permissions for ioBroker
+	- starts ioBroker with the iobroker user
 
+full:
+	- The full version scans all installed adapters and installs all known dependencies (if there is something missing or not longer needed please open an issue on github)
+	- Set AVAHI enable avahi support. If yahka adapter is installed avahi gets enabled automatically
+	- Set IOBROKER_ADMIN_PORT to change the port of the admin adapter
+	- Set IOBROKER_WEB_PORT to change the port of the web adapter
+	- Set BT_ENABLE to 1if you have a bluetooth stick or something like that installed
+	- Set ASTERISK to:
+		1 = ioBroker & asterisk running on same server with ffmpeg
+		2 = ioBroker & asterisk running on same server with sox
+		3 = ioBroker & asterisk running on different server with ffmpeg
+		4 = ioBroker & asterisk running on different server with sox
+	- If a file with the name "UPGRADE" is detected in the iobroker folder the startup script runs a "npm rebuild" in the ioBroker folder. Only do this if you restore a ioBroker folder which was installed with a npm version prior to v8.
+	- If a file with the name "pre_script.sh" is detected in the iobroker folder the startup script makes it runable and starts it
+	- If a file with the name "custom_packages.list" is detected in the iobroker folder it installs all packages in the file
+	- If a file with the name "post_script.sh" is detected in the iobroker folder the startup script makes it runable and starts it
+	- If a file with NPM_UPGRADE_TRIGGER="/opt/iobroker/REINSTALL"
+	- before it starts ioBroker it corrects file and folder permissions for ioBroker
+	- starts ioBroker with the iobroker user
+	
+min: 	
+	- Minimal version, is running fine too but needs a little bit more work
+	- Set AVAHI enable avahi support. If yahka adapter is installed avahi gets enabled automatically
+	- Set IOBROKER_ADMIN_PORT to change the port of the admin adapter
+	- Set IOBROKER_WEB_PORT to change the port of the web adapter
+	- starts ioBroker with the iobroker user	
+
+### Gotchas / Known Issues
+At the moment I'm testing the language and timezone settings. Maybe they don't work as expecting at the moment.
 
 ### Issues / Contributing
 

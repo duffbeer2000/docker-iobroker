@@ -9,14 +9,14 @@ asterisk=$ASTERISK
 yahka="false"
 
 #Declarate variables
-version="0.7.0"
+version="0.7.1"
 IOB_USER="iobroker"
 IOB_DIR="/opt/iobroker"
 HOSTNAME_NEW=$(hostname)
 PACKAGELIST="/opt/iobroker/custom_packages.list"
 PRE_SCRIPT="/opt/iobroker/pre_script.sh"
 POST_SCRIPT="/opt/iobroker/post_script.sh"
-REINSTALL_TRIGGER="/opt/iobroker/RUNREINSTALL"
+NPM_UPGRADE_TRIGGER="/opt/iobroker/UPGRADE"
 
 # Getting date and time for logging 
 dati=`date '+%Y-%m-%d %H:%M:%S'`
@@ -337,8 +337,10 @@ pre_script() {
 	echo ''
 	echo 'Pre-Start Script found - Running the Pre-Script...'
 	if [ "$IS_ROOT" = true ]; then
+		chmod +x $PRE_SCRIPT
 		bash $PRE_SCRIPT
 	else
+		sudo chmod +x $PRE_SCRIPT
 		sudo bash $PRE_SCRIPT
 	fi
 	echo 'Finished running the Pre-Start Script...'
@@ -348,8 +350,10 @@ post_script() {
 	echo ''
 	echo 'Post-Start Script found - Running the Post-Start...'
 	if [ "$IS_ROOT" = true ]; then
+		chmod +x $POST_SCRIPT
 		bash $POST_SCRIPT
 	else
+		sudo chmod +x $POST_SCRIPT
 		sudo bash $POST_SCRIPT
 	fi
 	echo 'Finished running the Post-Start Script...'
@@ -391,14 +395,14 @@ cleanup_aptcache() {
 	fi
 }
 
-reinstall_iobroker() {
-# Reinstall iobroker if Reinstall Trigger is found
+npm_rebuild() {
+# Upgrades iobroker folder if reinstall trigger is found
 	echo ''
-	echo 'Reinstall trigger found! - Running the Reinstall-Script...'
+	echo 'NPM Upgrade trigger found! - Running npm rebuild...'
 	cd /opt/iobroker
-	bash ./reinstall.sh
-	rm $REINSTALL_TRIGGER
-	echo 'Finished running the Reinstall-Script...'
+	npm rebuild
+	rm $NPM_UPGRADE_TRIGGER
+	echo 'Finished running the npm-upgrade...'
 }
 
 change_owner() {
@@ -547,6 +551,10 @@ if [ `ls -1a|wc -l` -lt 3 ]; then
 	restore_iobroker_folder
 fi
 
+if [ -f $NPM_UPGRADE_TRIGGER ]; then
+	npm_rebuild
+fi
+
 # Check if installation is updated or new
 if [ -f /opt/scripts/.install_host ]; then
 	first_run_prep
@@ -578,10 +586,6 @@ fi
 # Run Post-Start script if exist
 if [ -f $POST_SCRIPT ]; then
 	post_script
-fi
-
-if [ -f $REINSTALL_TRIGGER ]; then
-	reinstall_iobroker
 fi
 
 # Cleanup apt-cache

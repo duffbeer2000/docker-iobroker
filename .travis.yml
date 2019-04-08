@@ -71,7 +71,6 @@ jobs:
         
     - stage: Manifest
       env:
-        - ARCH=amd64
         - JOB_NAME="Manifest"
       script:
         - echo Placeholder
