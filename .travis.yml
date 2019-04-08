@@ -95,10 +95,12 @@ after_success:
       cat manifest.yaml | sed "s/\$FULLVERSION/latest/g" > manifestlatest.yaml
       #image: duffbeer2000/iobroker:min-version
       cat manifest.yml | sed "s/\$VERSION/min-${VERSION}/g" > manifest.yaml
-      cat manifest.yaml | sed "s/\$FULLVERSION/min-${VERSION}/g" > manifestmin.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/min-${VERSION}/g" > manifestminversion.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/min/g" > manifestmin.yaml
       #image: duffbeer2000/iobroker:full-version
       cat manifest.yml | sed "s/\$VERSION/full-${VERSION}/g" > manifest.yaml
-      cat manifest.yaml | sed "s/\$FULLVERSION/full-${VERSION}/g" > manifestfull.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/full-${VERSION}/g" > manifestfullversion.yaml
+      cat manifest.yaml | sed "s/\$FULLVERSION/full/g" > manifestfull.yaml
       #Push to dockerhub
       mv manifestversion.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
@@ -106,7 +108,11 @@ after_success:
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
       mv manifestmin.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifestminversion.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
       mv manifestfull.yaml manifest.yaml
+      ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
+      mv manifestfullversion.yaml manifest.yaml
       ./manifest-tool --username $DOCKER_LOGIN --password $DOCKER_PASS push from-spec manifest.yaml
       #image: duffbeer2000/iobroker:amd64
       cat manifest_amd64.yml | sed "s/\$VERSION/${VERSION}/g" > manifest.yaml
