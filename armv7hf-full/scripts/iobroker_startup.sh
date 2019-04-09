@@ -520,8 +520,7 @@ set_capabilities() {
 		setcap 'cap_net_admin,cap_net_bind_service,cap_net_raw+eip' $(eval readlink -f `which node`)
 	else
 		setcap 'cap_net_bind_service,cap_net_raw+eip' $(eval readlink -f `which node`)
-		${yellow}
-		echo ''
+		echo "${yellow} "
 		echo "If you have any adapters that need the CAP_NET_ADMIN capability,"
 		echo "you need to start the docker container with the option --cap-add=NET_ADMIN"
 		echo "and manually add that capability to node${normal}"
