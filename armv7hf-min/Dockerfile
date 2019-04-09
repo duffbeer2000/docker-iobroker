@@ -64,6 +64,8 @@ COPY scripts /opt/scripts
 # Set scripts executable
 RUN chmod -R +x /opt/scripts
 
+VOLUME /opt/iobroker
+
 # Exposed Ports
 # 8081 iobroker admin
 # 8082 iobroker vis

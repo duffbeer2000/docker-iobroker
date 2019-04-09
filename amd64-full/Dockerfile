@@ -21,8 +21,6 @@ RUN apt-get update && apt-get install -y \
 	# https://forum.iobroker.net/viewtopic.php?t=10920
 	python-dev\
 	sudo \
-	# install to get installed adapters
-	jq \
 	# Install nano and net-tools for debugging
 	nano \
 	net-tools \
@@ -38,12 +36,6 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
  && \dpkg-reconfigure --frontend=noninteractive locales \
  && \update-locale LANG=de_DE.UTF-8 \
  && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
- 
-#https://hub.docker.com/_/debian/
-#https://github.com/docker-library/postgres/blob/69bc540ecfffecce72d49fa7e4a46680350037f9/9.6/Dockerfile#L21-L24
-#RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
-#    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-#ENV LANG en_US.utf8
 
 ## Create the neccessary folders and set access rights
 RUN mkdir -p /opt/scripts \
@@ -55,6 +47,8 @@ RUN mkdir -p /opt/scripts \
 RUN echo $(hostname) > /opt/scripts/.install_host \
  && sudo apt-get update \
  && curl -sL https://iobroker.net/install.sh | bash - \
+ ## install jq to get installed adapters
+ && apt-get install -y jq \
  && sudo rm -rf /var/lib/apt/lists/*
 
 ## Install Node.js native addon build tool
