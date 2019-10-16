@@ -6,12 +6,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
 ## Install necessary packages
-RUN apt-get update && apt-get install -y --no-install-recommends\
+RUN apt-get update && apt-get install -y\
 	apt-utils \
 	build-essential \
 	curl \
 	git \
 	gnupg2 \
+	gosu \
 	libavahi-compat-libdnssd-dev \
 	libpam0g-dev \
 	libudev-dev \
@@ -20,13 +21,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 	python \
 	# https://forum.iobroker.net/viewtopic.php?t=10920
 	python-dev\
-	gosu \
 	sudo \
  && rm -rf /var/lib/apt/lists/*
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
  && apt-get update && apt-get install -y nodejs \
  && node -v \
  && nodejs -v \

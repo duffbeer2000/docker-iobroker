@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 	curl \
 	git \
 	gnupg2 \
+	gosu \
 	libavahi-compat-libdnssd-dev \
 	libpam0g-dev \
 	libudev-dev \
@@ -21,14 +22,11 @@ RUN apt-get update && apt-get install -y \
 	# https://forum.iobroker.net/viewtopic.php?t=10920
 	python-dev\
 	sudo \
-	# Install nano and net-tools for debugging
-	nano \
-	net-tools \
  && rm -rf /var/lib/apt/lists/*
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
  && apt-get update && apt-get install -y nodejs \
  && rm -rf /var/lib/apt/lists/* \
  ## Set language and timezone
@@ -43,20 +41,20 @@ RUN mkdir -p /opt/scripts \
 
 ## ioBroker installation
 RUN echo $(hostname) > /opt/scripts/.install_host \
- && sudo apt-get update \
+ && apt-get update \
  ##ATTENTION THIS IS A TEMPORARY WORKAROUND TILL THE BUG IS FIXED
  && npm config set unsafe-perm true \
  ##ATTENTION THIS IS A TEMPORARY WORKAROUND TILL THE BUG IS FIXED
  && curl -sL https://iobroker.net/install.sh | bash - \
- && sudo rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
 ## Install Node.js native addon build tool
 WORKDIR /opt/iobroker/
-RUN sudo npm install node-gyp -g \
+RUN npm install node-gyp -g \
  && node -v > /opt/scripts/.dockernodeversion \
  && nodejs -v > /opt/iobroker/.dockernodejsversion \
  && npm -v > /opt/scripts/.dockernpmversion \
- && sudo tar -cf /opt/initial_iobroker.tar -C / opt/iobroker \
+ && tar -cf /opt/initial_iobroker.tar -C / opt/iobroker \
  ##ATTENTION THIS IS A TEMPORARY WORKAROUND TILL THE BUG IS FIXED
  && npm config set unsafe-perm false
  ##ATTENTION THIS IS A TEMPORARY WORKAROUND TILL THE BUG IS FIXED

@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 	curl \
 	git \
 	gnupg2 \
+	gosu \
 	libavahi-compat-libdnssd-dev \
 	libpam0g-dev \
 	libudev-dev \
@@ -21,14 +22,11 @@ RUN apt-get update && apt-get install -y \
 	# https://forum.iobroker.net/viewtopic.php?t=10920
 	python-dev\
 	sudo \
-	# Install nano and net-tools for debugging
-	nano \
-	net-tools \
  && rm -rf /var/lib/apt/lists/*
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
  && apt-get update && apt-get install -y nodejs \
  && rm -rf /var/lib/apt/lists/* \ 
  ## Set language and timezone
