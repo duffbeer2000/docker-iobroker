@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:stretch
 
 MAINTAINER Christian
 
@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
 ## Install necessary packages
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends\
 	apt-utils \
 	build-essential \
 	curl \
@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
 	python \
 	# https://forum.iobroker.net/viewtopic.php?t=10920
 	python-dev\
+	gosu \
 	sudo \
 	# Install nano and net-tools for debugging
 	nano \
@@ -28,7 +29,7 @@ RUN apt-get update && apt-get install -y \
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
  && apt-get install -y nodejs \
  && rm -rf /var/lib/apt/lists/* \ 
  ## Set language and timezone
@@ -43,20 +44,24 @@ RUN mkdir -p /opt/scripts \
 
 ## ioBroker installation
 RUN echo $(hostname) > /opt/scripts/.install_host \
- && sudo apt-get update \
+ && apt-get update \
  && curl -sL https://iobroker.net/install.sh | bash - \
- && sudo rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
 ## Install Node.js native addon build tool
 WORKDIR /opt/iobroker/
-RUN sudo npm install node-gyp -g \
- && sudo tar -cf /opt/initial_iobroker.tar -C / opt/iobroker
+RUN npm install -g node-gyp  \
+ && node -v > /opt/scripts/.dockernodeversion \
+ && nodejs -v > /opt/iobroker/.dockernodejsversion \
+ && npm -v > /opt/scripts/.dockernpmversion \
+ && tar -cf /opt/initial_iobroker.tar -C / opt/iobroker
 
 ## Add necessary scripts
 COPY scripts /opt/scripts
 
 # Set scripts executable
-RUN chmod -R +x /opt/scripts
+RUN chmod +x /opt/scripts\iobroker_startup.sh \
+ && chmod +x /opt/scripts\avahi_startup.sh
 
 VOLUME /opt/iobroker
 
