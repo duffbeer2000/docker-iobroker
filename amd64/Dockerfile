@@ -22,15 +22,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 	python-dev\
 	gosu \
 	sudo \
-	# Install nano and net-tools for debugging
-	nano \
-	net-tools \
  && rm -rf /var/lib/apt/lists/*
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
  && apt-get update && apt-get install -y nodejs \
+ && node -v \
+ && nodejs -v \
+ && npm -v \
  && rm -rf /var/lib/apt/lists/* \ 
  ## Set language and timezone
  && sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen \
