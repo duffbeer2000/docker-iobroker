@@ -57,6 +57,9 @@ RUN echo $(hostname) > /opt/scripts/.install_host \
 ## Install Node.js native addon build tool
 WORKDIR /opt/iobroker/
 RUN sudo npm install node-gyp -g \
+ && node -v > /opt/scripts/.dockernodeversion \
+ && nodejs -v > /opt/iobroker/.dockernodejsversion \
+ && npm -v > /opt/scripts/.dockernpmversion \
  && sudo tar -cf /opt/initial_iobroker.tar -C / opt/iobroker \
  ##ATTENTION THIS IS A TEMPORARY WORKAROUND TILL THE BUG IS FIXED
  && npm config set unsafe-perm false
@@ -67,8 +70,10 @@ COPY maintenance_scripts /opt/maintenance_scripts
 COPY scripts /opt/scripts
 
 # Set scripts executable
-RUN chmod -R +x /opt/scripts \
- && chmod -R +x /opt/maintenance_scripts
+RUN chmod +x /opt/scripts/iobroker_startup.sh \
+ && chmod +x /opt/scripts/avahi_startup.sh \
+ && chmod +x /opt/maintenance_scripts/enable_multihost.sh \
+ && chmod +x /opt/maintenance_scripts/iobroker_stop.sh
 
 VOLUME /opt/iobroker
 

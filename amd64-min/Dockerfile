@@ -50,13 +50,17 @@ RUN echo $(hostname) > /opt/scripts/.install_host \
 ## Install Node.js native addon build tool
 WORKDIR /opt/iobroker/
 RUN sudo npm install node-gyp -g \
+ && node -v > /opt/scripts/.dockernodeversion \
+ && nodejs -v > /opt/iobroker/.dockernodejsversion \
+ && npm -v > /opt/scripts/.dockernpmversion \
  && sudo tar -cf /opt/initial_iobroker.tar -C / opt/iobroker
 
 ## Add necessary scripts
 COPY scripts /opt/scripts
 
 # Set scripts executable
-RUN chmod -R +x /opt/scripts
+RUN chmod +x /opt/scripts/iobroker_startup.sh \
+ && chmod +x /opt/scripts/avahi_startup.sh
 
 # Exposed Ports
 # 8081 iobroker admin

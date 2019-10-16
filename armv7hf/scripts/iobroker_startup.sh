@@ -307,6 +307,32 @@ if [ `ls -1a|wc -l` -lt 3 ]; then
 	restore_iobroker_folder
 fi
 
+# Check Running Node, NodeJS and NPM Version
+node -v > /opt/iobroker/.nodeversion
+npm -v > /opt/iobroker/.npmversion
+nodejs -v > /opt/iobroker/.nodejsversion
+
+if [ $(cat /opt/iobroker/.nodeversion) == $(cat /opt/scripts/.dockernodeversion) ]; then
+	echo "Node-Version is the same as in the container"
+else
+	echo "Previous running node version: " $(cat /opt/iobroker/.nodeversion)
+	echo "Container node version: " $(cat /opt/scripts/.dockernodeversion)
+fi
+
+if [ $(cat /opt/iobroker/.nodejsversion) == $(cat /opt/iobroker/.dockernodejsversion) ]; then
+	echo "NodeJS-Version is the same as in the container"
+else
+	echo "Previous running nodejs version: " $(cat /opt/iobroker/.nodejsversion)
+	echo "Container nodejs version: " $(cat /opt/scripts/.dockernodejsversion)
+fi
+
+if [ $(cat /opt/iobroker/.npmversion) == $(cat /opt/scripts/.dockernpmversion) ]; then
+	echo "NPM-Version is the same as in the container"
+else
+	echo "Previous running npm version: " $(cat /opt/iobroker/.npmversion)
+	echo "Container npm version: " $(cat /opt/scripts/.dockernpmversion)
+fi
+
 if [ -f $NPM_UPGRADE_TRIGGER ]; then
 	npm_rebuild
 fi

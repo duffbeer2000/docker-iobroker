@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
  && apt-get install -y nodejs \
  && rm -rf /var/lib/apt/lists/* \ 
  ## Set language and timezone
@@ -60,8 +60,8 @@ RUN npm install -g node-gyp  \
 COPY scripts /opt/scripts
 
 # Set scripts executable
-RUN chmod +x /opt/scripts\iobroker_startup.sh \
- && chmod +x /opt/scripts\avahi_startup.sh
+RUN chmod +x /opt/scripts/iobroker_startup.sh \
+ && chmod +x /opt/scripts/avahi_startup.sh
 
 VOLUME /opt/iobroker
 
