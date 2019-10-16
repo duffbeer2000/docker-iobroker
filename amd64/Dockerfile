@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
 ## Install necessary packages
-RUN apt-get update && apt-get install -y\
+RUN apt-get update && apt-get install -y \
 	apt-utils \
 	build-essential \
 	curl \
@@ -26,11 +26,9 @@ RUN apt-get update && apt-get install -y\
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
- && apt-get update && apt-get install -y nodejs \
- && node -v \
- && nodejs -v \
- && npm -v \
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
+ && apt-get update && apt-get install -y \
+    nodejs \
  && rm -rf /var/lib/apt/lists/* \ 
  ## Set language and timezone
  && sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen \
