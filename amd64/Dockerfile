@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 
 
 ## Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
  && apt-get update && apt-get install -y nodejs \
  && node -v \
  && nodejs -v \
